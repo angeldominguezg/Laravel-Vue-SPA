@@ -8,7 +8,8 @@
 			</div>
 			<div class="recipe__details">
 				<div class="recipe__details_inner">
-					<small> Submitted by: {{ recipe.user.name }}</small>
+					<small> Submitted by: {{ recipe.user.name }} </small><br>
+					<small> {{ recipe.created_at | formatDate2('DD MMMM YYYY') }} </small>
 					<h1 class="recipe__title">{{ recipe.name }}</h1>
 					<p class="recipe_description">{{ recipe.description }}</p>
 					<div v-if="auth.api_token && auth.user_id === recipe.user_id">
@@ -61,6 +62,8 @@
 
 	import { get, del } from '../../helpers/api'
 
+	import moment from 'moment'
+
 	export default {
 		data() {
 			return {
@@ -73,6 +76,17 @@
 				}
 			}
 		},
+
+		filters: {
+			formatDate(date, outputFormat) {
+				return moment(date).format(outputFormat)
+			},
+			
+			formatDate2(date, outputFormat) {
+				return 'On '+moment(date).format(outputFormat)
+			},
+
+		}, 
 
 		created() {
 			get(`/api/recipes/${this.$route.params.id}`) // Recipes index
